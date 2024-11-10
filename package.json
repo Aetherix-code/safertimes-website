@@ -11,6 +11,7 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
+    "@nuxt/icon": "^1.7.2",
     "@primevue/themes": "^4.2.1",
     "chart.js": "^4.4.6",
     "nuxt": "^3.14.159",

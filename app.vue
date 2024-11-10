@@ -2,7 +2,10 @@
 useHead({
   title: 'Safer Times - התפלגות אזעקות לפי זמנים',
   meta: [
-    {name: 'description', content: 'מערכת שמנתחת את התפלגות האזעקות לפי אזורים נבחרים ומציגה את התוצאות על גבי תצוגה נוחה לקריאה'}
+    { name: 'description', content: 'מערכת שמנתחת את התפלגות האזעקות לפי אזורים נבחרים ומציגה את התוצאות על גבי תצוגה נוחה לקריאה' }
+  ],
+  link: [
+    { rel: 'icon', type: 'image/png', href: '/favicon.png' }
   ],
   bodyAttrs: {
     dir: 'rtl'
@@ -36,7 +39,8 @@ const setChartData = () => {
           getPercentageInRange(18, 20),
           getPercentageInRange(20, 22),
           getPercentageInRange(22, 24),
-        ]
+        ],
+        borderRadius: 60
       }
     ]
   };
@@ -52,6 +56,7 @@ const setChartOptions = () => {
     aspectRatio: 0.8,
     plugins: {
       legend: {
+        display: false,
         labels: {
           color: textColor
         }
@@ -75,6 +80,7 @@ const setChartOptions = () => {
           color: textColorSecondary
         },
         grid: {
+          display: false,
           color: surfaceBorder,
           drawBorder: false
         }
@@ -151,7 +157,13 @@ const selectCities = async () => {
   </section>
 
   <section class="prompt" v-if="!loading && !hasResults">
-    אנא התחילו מבחירת ערים
+    <strong>
+      Safer-Times
+      הינו כלי המאפשר לכם לצפות בהתפלגות האזעקות בערים שתבחרו בשעות שונות
+    </strong>
+    <div>
+      אנא התחילו מבחירת ערים
+    </div>
   </section>
 
   <section class="results" v-if="!loading && hasResults">
@@ -178,6 +190,11 @@ const selectCities = async () => {
       <template #content class="pb-5">
         <MultiSelect v-model="selectedCities" :options="cities" @change="selectCities" display="chip"
           :showToggleAll="false" filter placeholder="בחירת ערים" :maxSelectedLabels="3" class="w-full" />
+
+        <div class="credits">
+          פותח על ידי
+          <a href="https://www.djint.net/?_from=safer-times" target="_blank">DJint.net</a>
+        </div>
       </template>
     </Card>
   </div>
@@ -228,7 +245,19 @@ section.prompt,
 section.loading-results {
   text-align: center;
   margin-top: 40px;
-  font-weight: bold;
   color: rgb(101, 101, 101)
+}
+
+.credits {
+  text-align: center;
+  margin-bottom: 2px;
+  margin-top: 5px;
+  color: rgb(101, 101, 101);
+  font-size: 0.7em;
+}
+
+.credits>a {
+  color: rgb(101, 101, 101);
+  text-decoration: none;
 }
 </style>

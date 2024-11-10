@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     'primeflex/primeflex.css',
     // other global styles if any
   ],
-  modules: ['@primevue/nuxt-module', 'nuxt-gtag'],
+  modules: ['@primevue/nuxt-module', 'nuxt-gtag', '@nuxt/icon'],
   primevue: {
       options: {
           theme: {
