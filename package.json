@@ -4,14 +4,23 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host=0.0.0.0",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@primevue/themes": "^4.2.1",
+    "chart.js": "^4.4.6",
     "nuxt": "^3.14.159",
+    "nuxt-gtag": "^3.0.1",
+    "primeflex": "^3.3.1",
+    "primevue": "^4.2.1",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@primevue/nuxt-module": "^4.2.1",
+    "sass-embedded": "^1.80.6"
   }
 }
