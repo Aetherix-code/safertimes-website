@@ -3,21 +3,23 @@ import path from 'path';
 
 export default defineEventHandler(async (event) => {
     let cities = getQuery(event).cities;
-    if (!Array.isArray(cities) && cities) {
+    if (cities && !Array.isArray(cities) && cities) {
         cities = [cities];
     }
 
-    const url = new URL('https://alerts-history.oref.org.il/Shared/Ajax/GetAlarmsHistory.aspx?lang=he&mode=3');
-    let i = 0;
-    for (const city of cities) {
-        url.searchParams.append(`city_${i}`, city);
-        i++;
-    }
 
-    console.log(url.toString());
+    // const url = new URL('https://alerts-history.oref.org.il/Shared/Ajax/GetAlarmsHistory.aspx?lang=he&mode=3');
+    // let i = 0;
+    // for (const city of cities) {
+    //     url.searchParams.append(`city_${i}`, city);
+    //     i++;
+    // }
 
-    let response;
+    // console.log(url.toString());
+
+    // let response;
     try {
+        throw 'Failed';
         // Define headers
         const headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
@@ -34,14 +36,14 @@ export default defineEventHandler(async (event) => {
         const entries = json.map(entry => entry.time);
         return entries;
     } catch (e) {
-        console.error(e);
+        // console.error(e);
         console.log('Using offline version...');
 
         try {
             const filePath = path.resolve('data/alerts_history.json'); // adjust path as needed
             const data = await fs.readFile(filePath, 'utf-8');
             const jsonData = JSON.parse(data);
-            const entries = jsonData.filter(entry => cities.includes(entry.data)).map(entry => entry.time);
+            const entries = jsonData.filter(entry => !cities || cities.includes(entry.data)).map(entry => entry.time);
             return entries;
         } catch (e) {
             console.error(e);

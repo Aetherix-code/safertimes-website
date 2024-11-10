@@ -2,6 +2,7 @@
 const props = defineProps({
     image: String,
     title: String,
+    hoursRange: String,
     percentage: Number
 })
 
@@ -37,6 +38,7 @@ const statusText = computed(() => {
     <div class="col-12 lg:col-6">
         <Card class="pod-time" :data-safety="colorClass">
             <template #title>{{ props.title }}</template>
+            <template #subtitle>{{ props.hoursRange }}</template>
             <template #content>
                 <Image class="pod-row-image" :src="props.image" />
                 <div class="flex">
@@ -101,45 +103,57 @@ const statusText = computed(() => {
 </style>
 
 <style lang="scss">
+.pod-time  .p-card-caption{
+    gap: unset;
+}
+
 .pod-time {
+    .p-card-caption {
+        gap: unset;
+    }
+
+    .p-card-subtitle {
+        margin-bottom: 5px;
+        font-size: .8em;
+    }
 
     &[data-safety=safe] {
         .circle {
-            border: 0.2vw solid green;
+            border: 0.2vw solid #8CBC6B;
         }
 
         .circle-1 {
-            background-color: green
+            background-color: #8CBC6B
         }
     }
 
     &[data-safety=probably-safe] {
         .circle {
-            border: 0.2vw solid #ffc700;
+            border: 0.2vw solid #DDB94A;
         }
 
         .circle-1 {
-            background-color: #ffc700
+            background-color: #DDB94A
         }
     }
 
     &[data-safety=warning] {
         .circle {
-            border: 0.2vw solid #ff9300;
+            border: 0.2vw solid #DB943F;
         }
 
         .circle-1 {
-            background-color: #ff9300
+            background-color: #DB943F
         }
     }
 
     &[data-safety=danger] {
         .circle {
-            border: 0.2vw solid #red;
+            border: 0.2vw solid #D04741;
         }
 
         .circle-1 {
-            background-color: #red
+            background-color: #D04741;
         }
     }
 
