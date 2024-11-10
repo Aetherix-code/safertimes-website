@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
         return entries;
     } catch (e) {
         console.error(e);
-        console.log(response.text());
+        console.log(await response.text());
         throw createError({
             statusCode: 500,
             statusMessage: 'Failed to get data'
