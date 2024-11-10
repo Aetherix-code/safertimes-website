@@ -189,7 +189,7 @@ const selectCities = async () => {
     <Card class="w-full md:w-10 mx-auto cities-card">
       <template #content class="pb-5">
         <MultiSelect v-model="selectedCities" :options="cities" @change="selectCities" display="chip"
-          :showToggleAll="false" filter placeholder="בחירת ערים" :maxSelectedLabels="3" class="w-full" />
+          :showToggleAll="false" filter placeholder="בחירת ערים" :virtualScrollerOptions="{ itemSize: 44 }" :maxSelectedLabels="3" class="w-full" />
 
         <div class="credits">
           פותח על ידי
