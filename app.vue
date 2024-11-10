@@ -3,9 +3,14 @@ const route = useRoute();
 
 const entries = ref([]);
 const hasResults = ref(true);
-const { data } = await useFetch('/api/cities');
-entries.value = data.value;
 const selectedCities = ref(route.query.cities?.split('_') || []);
+let query = {};
+if (selectedCities.value.length) {
+  query.cities = selectedCities.value;
+}
+
+const { data } = await useFetch('/api/cities', { query });
+entries.value = data.value;
 
 const description = 'מערכת שמנתחת את התפלגות האזעקות לפי אזורים נבחרים ומציגה את התוצאות על גבי תצוגה נוחה לקריאה';
 const siteTitle = computed(() => {
@@ -38,10 +43,37 @@ const cities = ["אזור תעשייה שחורת", "אילות", "אילת", "�
 
 
 const loading = ref(false);
-const chartData = ref();
-const chartOptions = ref();
+// const chartData = ref();
+const chartOptions = ref({
+  maintainAspectRatio: false,
+  aspectRatio: 0.8,
+  plugins: {
+    legend: {
+      display: false,
+    }
+  },
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          weight: 500
+        }
+      },
+      grid: {
+        display: false,
+        drawBorder: false
+      }
+    },
+    y: {
+      grid: {
+        display: false,
+        drawBorder: false
+      }
+    }
+  }
+});
 
-const setChartData = () => {
+const chartData = computed(() => {
   return {
     labels: ['00:00-06:00', '06:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00', '22:00-00:00'],
     datasets: [
@@ -63,50 +95,8 @@ const setChartData = () => {
       }
     ]
   };
-};
-const setChartOptions = () => {
-  const documentStyle = getComputedStyle(document.documentElement);
-  const textColor = documentStyle.getPropertyValue('--p-text-color');
-  const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-  const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+});
 
-  return {
-    maintainAspectRatio: false,
-    aspectRatio: 0.8,
-    plugins: {
-      legend: {
-        display: false,
-        labels: {
-          color: textColor
-        }
-      }
-    },
-    scales: {
-      x: {
-        ticks: {
-          color: textColorSecondary,
-          font: {
-            weight: 500
-          }
-        },
-        grid: {
-          display: false,
-          drawBorder: false
-        }
-      },
-      y: {
-        ticks: {
-          color: textColorSecondary
-        },
-        grid: {
-          display: false,
-          color: surfaceBorder,
-          drawBorder: false
-        }
-      }
-    }
-  };
-}
 
 const getTotalEntriesInRange = (startHour, endHour) => {
   return entries.value.filter(entry => {
@@ -124,12 +114,6 @@ const getPercentageInRange = (startHour, endHour) => {
   return Math.round((getTotalEntriesInRange(startHour, endHour) / total) * 100);
 }
 
-onMounted(() => {
-  // const queryOptions = route.query.cities;
-  // selectedCities.value = queryOptions ? queryOptions.split('_') : [];
-  selectCities();
-})
-
 const selectCities = async () => {
   const router = useRouter();
   hasResults.value = false;
@@ -142,8 +126,6 @@ const selectCities = async () => {
     const data = await response.json();
     entries.value = data;
     hasResults.value = true;
-    chartData.value = setChartData();
-    chartOptions.value = setChartOptions();
     if (selectedCities.value.length) {
       router.push({
         path: route.path,
@@ -203,9 +185,12 @@ const selectCities = async () => {
     <!-- pod = part of day, e.g. morning, noon, night-->
     <div class="pod-breakdown-container">
       <div class="grid">
-        <PodCube title="בוקר" hoursRange="06:00-12:00" image="/images/morning.png" :percentage="getPercentageInRange(6, 12)" />
-        <PodCube title="צהריים" hoursRange="12:00-16:00" image="/images/noon.png" :percentage="getPercentageInRange(12, 16)" />
-        <PodCube title="ערב" hoursRange="16:00-21:00" image="/images/evening.png" :percentage="getPercentageInRange(16, 21)" />
+        <PodCube title="בוקר" hoursRange="06:00-12:00" image="/images/morning.png"
+          :percentage="getPercentageInRange(6, 12)" />
+        <PodCube title="צהריים" hoursRange="12:00-16:00" image="/images/noon.png"
+          :percentage="getPercentageInRange(12, 16)" />
+        <PodCube title="ערב" hoursRange="16:00-21:00" image="/images/evening.png"
+          :percentage="getPercentageInRange(16, 21)" />
         <PodCube title="לילה" hoursRange="21:00-06:00" image="/images/night.png"
           :percentage="getPercentageInRange(21, 24) + getPercentageInRange(0, 6)" />
       </div>

@@ -7,6 +7,8 @@ export default defineEventHandler(async (event) => {
         cities = [cities];
     }
 
+    console.log(cities);
+
 
     // const url = new URL('https://alerts-history.oref.org.il/Shared/Ajax/GetAlarmsHistory.aspx?lang=he&mode=3');
     // let i = 0;
