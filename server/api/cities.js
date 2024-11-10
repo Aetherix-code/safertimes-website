@@ -1,3 +1,6 @@
+import { promises as fs } from 'fs';
+import path from 'path';
+
 export default defineEventHandler(async (event) => {
     let cities = getQuery(event).cities;
     if (!Array.isArray(cities) && cities) {
@@ -32,10 +35,20 @@ export default defineEventHandler(async (event) => {
         return entries;
     } catch (e) {
         console.error(e);
-        console.log(await response.text());
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Failed to get data'
-        })
+        console.log('Using offline version...');
+
+        try {
+            const filePath = path.resolve('data/alerts_history.json'); // adjust path as needed
+            const data = await fs.readFile(filePath, 'utf-8');
+            const jsonData = JSON.parse(data);
+            const entries = jsonData.filter(entry => cities.includes(entry.data)).map(entry => entry.time);
+            return entries;
+        } catch (e) {
+            console.error(e);
+            throw createError({
+                statusCode: 500,
+                statusMessage: 'Failed to get data'
+            })
+        }
     }
 })
