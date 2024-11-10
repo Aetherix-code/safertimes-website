@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
 
     console.log(url.toString());
 
+    let response;
     try {
         // Define headers
         const headers = {
@@ -22,7 +23,7 @@ export default defineEventHandler(async (event) => {
         };
 
         // Make fetch request with headers
-        const response = await fetch(url, {
+        response = await fetch(url, {
             method: 'GET',
             headers: headers
         });
@@ -31,6 +32,7 @@ export default defineEventHandler(async (event) => {
         return entries;
     } catch (e) {
         console.error(e);
+        console.log(response.text());
         throw createError({
             statusCode: 500,
             statusMessage: 'Failed to get data'
