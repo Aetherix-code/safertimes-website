@@ -14,12 +14,23 @@ export default defineEventHandler(async (event) => {
     console.log(url.toString());
 
     try {
-        const response = await fetch(url);
+        // Define headers
+        const headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+            'Referer': 'https://alerts-history.oref.org.il/12481-he/Pakar.aspx?pagemode=iframe&u1st=0',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+
+        // Make fetch request with headers
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: headers
+        });
         const json = await response.json();
         const entries = json.map(entry => entry.time);
         return entries;
     } catch (e) {
-        console.log(e);
+        console.error(e);
         throw createError({
             statusCode: 500,
             statusMessage: 'Failed to get data'
