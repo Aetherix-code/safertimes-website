@@ -1,9 +1,11 @@
 <script setup>
+const route = useRoute();
+
 const entries = ref([]);
 const hasResults = ref(true);
 const { data } = await useFetch('/api/cities');
 entries.value = data.value;
-const selectedCities = ref([]);
+const selectedCities = ref(route.query.cities?.split('_') || []);
 
 const description = 'מערכת שמנתחת את התפלגות האזעקות לפי אזורים נבחרים ומציגה את התוצאות על גבי תצוגה נוחה לקריאה';
 const siteTitle = computed(() => {
@@ -40,8 +42,6 @@ const chartData = ref();
 const chartOptions = ref();
 
 const setChartData = () => {
-  const documentStyle = getComputedStyle(document.documentElement);
-
   return {
     labels: ['00:00-06:00', '06:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00', '22:00-00:00'],
     datasets: [
@@ -111,7 +111,6 @@ const setChartOptions = () => {
 const getTotalEntriesInRange = (startHour, endHour) => {
   return entries.value.filter(entry => {
     const hour = parseInt(entry.split(':')[0]);
-    // console.log(`${entry} -> ${startHour} <= ${hour} < ${endHour}`, hour >= startHour && hour < endHour)
     return hour >= startHour && hour < endHour;
   }).length;
 }
@@ -126,15 +125,13 @@ const getPercentageInRange = (startHour, endHour) => {
 }
 
 onMounted(() => {
-  const route = useRoute();
-  const queryOptions = route.query.cities;
-  selectedCities.value = queryOptions ? queryOptions.split('_') : [];
+  // const queryOptions = route.query.cities;
+  // selectedCities.value = queryOptions ? queryOptions.split('_') : [];
   selectCities();
 })
 
 const selectCities = async () => {
   const router = useRouter();
-  const route = useRoute();
   hasResults.value = false;
   entries.value = [];
   loading.value = true;
