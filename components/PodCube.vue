@@ -8,11 +8,11 @@ const props = defineProps({
 
 const colorClass = computed(() => {
     const percentage = props.percentage || 0;
-    if (percentage <= 19) {
+    if (percentage <= 10) {
         return 'safe';
-    } else if (percentage <= 40) {
+    } else if (percentage <= 20) {
         return 'probably-safe';
-    } else if (percentage <= 60) {
+    } else if (percentage <= 40) {
         return 'warning';
     } else {
         return 'danger';
@@ -21,14 +21,14 @@ const colorClass = computed(() => {
 
 const statusText = computed(() => {
     const percentage = props.percentage || 0;
-    if (percentage <= 19) {
+    if (percentage <= 10) {
         return 'בטוח';
-    } else if (percentage <= 40) {
+    } else if (percentage <= 20) {
         return 'סיכון נמוך';
-    } else if (percentage <= 60) {
-        return 'סיכון גבוה';
+    } else if (percentage <= 40) {
+        return 'סיכון בינוני';
     } else {
-        return 'מסוכן';
+        return 'סיכון גבוה';
     }
 });
 
