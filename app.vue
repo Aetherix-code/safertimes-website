@@ -231,7 +231,7 @@ const selectCities = async () => {
           <a href="https://www.drsite.co.il/?_from=safer-times" target="_blank">DrSite.co.il</a>
           בניית אתרים
           |
-          <a href="mailto:jerry@djint.net">
+          <a href="mailto:team@djint.net?subject=Contact request from Safer-Times">
             יצירת קשר :)
           </a>
         </div>
