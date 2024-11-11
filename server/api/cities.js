@@ -45,8 +45,14 @@ export default defineEventHandler(async (event) => {
             const filePath = path.resolve('data/alerts_history.json'); // adjust path as needed
             const data = await fs.readFile(filePath, 'utf-8');
             const jsonData = JSON.parse(data);
-            const entries = jsonData.filter(entry => !cities || cities.includes(entry.data)).map(entry => entry.time);
-            return entries;
+            const filteredData = jsonData.filter(entry => !cities || cities.includes(entry.data));
+            const entries = filteredData.map(entry => entry.time);
+            let firstDate = null;
+            if (entries.length) {
+                const lastEntry = filteredData[filteredData.length - 1];
+                firstDate = lastEntry.date.replace(/\./g, '/');
+            }
+            return { entries, firstDate };
         } catch (e) {
             console.error(e);
             throw createError({

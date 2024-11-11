@@ -2,6 +2,7 @@
 const route = useRoute();
 
 const entries = ref([]);
+const firstDate = ref('');
 const hasResults = ref(true);
 const selectedCities = ref(route.query.cities?.split('_') || []);
 let query = {};
@@ -10,7 +11,8 @@ if (selectedCities.value.length) {
 }
 
 const { data } = await useFetch('/api/cities', { query });
-entries.value = data.value;
+entries.value = data.value.entries;
+firstDate.value = data.value.firstDate;
 
 const description = 'מערכת שמנתחת את התפלגות האזעקות לפי אזורים נבחרים ומציגה את התוצאות על גבי תצוגה נוחה לקריאה';
 const siteTitle = computed(() => {
@@ -124,7 +126,8 @@ const selectCities = async () => {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    entries.value = data;
+    entries.value = data.entries;
+    firstDate.value = data.firstDate;
     hasResults.value = true;
     if (selectedCities.value.length) {
       router.push({
@@ -182,6 +185,16 @@ const selectCities = async () => {
   </section>
 
   <section class="results" v-if="!loading && hasResults">
+    <div class="stats-info" v-if="entries.length">
+      מבוסס על נתונים של
+      {{ entries.length }}
+      אזעקות
+      <span v-if="firstDate">
+        מתאריך
+        {{ firstDate }}
+        ועד היום
+      </span>
+    </div>
     <!-- pod = part of day, e.g. morning, noon, night-->
     <div class="pod-breakdown-container">
       <div class="grid">
@@ -217,6 +230,10 @@ const selectCities = async () => {
           /
           <a href="https://www.drsite.co.il/?_from=safer-times" target="_blank">DrSite.co.il</a>
           בניית אתרים
+          |
+          <a href="mailto:jerry@djint.net">
+            יצירת קשר :)
+          </a>
         </div>
       </template>
     </Card>
@@ -261,9 +278,9 @@ body {
   right: 0;
 }
 
-.cities-card {
+.sticky-footer .cities-card {
   margin-bottom: -10px;
-  box-shadow: 0px 0px 55px -13px rgba(52, 103, 147, 1);
+  box-shadow: 0px 0px 55px -13px rgba(52, 103, 147, 1) !important;
 }
 
 section.prompt,
@@ -279,6 +296,13 @@ section.loading-results {
   margin-top: 5px;
   color: rgb(101, 101, 101);
   font-size: 0.7em;
+}
+
+.stats-info {
+  color: #949494;
+  font-size: 0.8em;
+  text-align: center;
+  margin-bottom: 5px;
 }
 
 .credits>a {
