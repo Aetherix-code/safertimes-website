@@ -1,7 +1,9 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
 
 export default defineEventHandler(async (event) => {
+    const client = new MongoClient(process.env.MONGO_URL);
+    const collection = client.db('saferTimes').collection('sirens');
+
     let cities = getQuery(event).cities;
     if (cities && !Array.isArray(cities) && cities) {
         cities = [cities];
@@ -9,56 +11,28 @@ export default defineEventHandler(async (event) => {
 
     console.log(cities);
 
+    // console.error(e);
+    console.log('Using offline version...');
 
-    // const url = new URL('https://alerts-history.oref.org.il/Shared/Ajax/GetAlarmsHistory.aspx?lang=he&mode=3');
-    // let i = 0;
-    // for (const city of cities) {
-    //     url.searchParams.append(`city_${i}`, city);
-    //     i++;
-    // }
-
-    // console.log(url.toString());
-
-    // let response;
     try {
-        throw 'Failed';
-        // Define headers
-        const headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
-            'Referer': 'https://alerts-history.oref.org.il/12481-he/Pakar.aspx?pagemode=iframe&u1st=0',
-            'X-Requested-With': 'XMLHttpRequest'
-        };
-
-        // Make fetch request with headers
-        response = await fetch(url, {
-            method: 'GET',
-            headers: headers
-        });
-        const json = await response.json();
-        const entries = json.map(entry => entry.time);
-        return entries;
-    } catch (e) {
-        // console.error(e);
-        console.log('Using offline version...');
-
-        try {
-            const filePath = path.resolve('data/alerts_history.json'); // adjust path as needed
-            const data = await fs.readFile(filePath, 'utf-8');
-            const jsonData = JSON.parse(data);
-            const filteredData = jsonData.filter(entry => !cities || cities.includes(entry.data));
-            const entries = filteredData.map(entry => entry.time);
-            let firstDate = null;
-            if (entries.length) {
-                const lastEntry = filteredData[filteredData.length - 1];
-                firstDate = lastEntry.date.replace(/\./g, '/');
-            }
-            return { entries, firstDate };
-        } catch (e) {
-            console.error(e);
-            throw createError({
-                statusCode: 500,
-                statusMessage: 'Failed to get data'
-            })
+        let query = {};
+        if (cities) {
+            query = {'siren.data': {'$in': cities}};
         }
+        const docs = await collection.find(query).sort({'date': '-1'}).toArray();
+        client.close();
+        const entries = docs.map(entry => entry.siren.time);
+        let firstDate = null;
+        if (entries.length) {
+            const lastEntry = docs[docs.length - 1];
+            firstDate = lastEntry.siren.date.replace(/\./g, '/');
+        }
+        return { entries, firstDate };
+    } catch (e) {
+        console.error(e);
+        throw createError({
+            statusCode: 500,
+            statusMessage: 'Failed to get data'
+        })
     }
 })
