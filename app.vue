@@ -93,7 +93,7 @@ onMounted(async () => {
 
 const chartData = computed(() => {
   return {
-    labels: ['00:00-06:00', '06:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00', '22:00-00:00'],
+    labels: ['00:00-06:00', '06:00-08:00', '08:00-10:00', '10:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00', '22:00-00:00'],
     datasets: [
       {
         label: 'התפלגות אזעקות (%)',
@@ -101,7 +101,9 @@ const chartData = computed(() => {
         borderColor: '#346793',
         data: [
           getPercentageInRange(0, 6),
-          getPercentageInRange(6, 12),
+          getPercentageInRange(6, 8),
+          getPercentageInRange(8, 10),
+          getPercentageInRange(10, 12),
           getPercentageInRange(12, 14),
           getPercentageInRange(14, 16),
           getPercentageInRange(16, 18),
