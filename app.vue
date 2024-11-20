@@ -227,8 +227,7 @@ const selectCities = async () => {
     <Card class="w-full md:w-10 mx-auto cities-card">
       <template #content class="pb-5">
         <MultiSelect v-model="selectedCities" :options="cities" @change="selectCities" display="chip"
-          :showToggleAll="false" filter placeholder="כל האזורים" :virtualScrollerOptions="{ itemSize: 24 }"
-          :maxSelectedLabels="3" class="w-full" />
+          :showToggleAll="false" emptyFilterMessage="לא נמצאו תוצאות" filter placeholder="כל האזורים" :virtualScrollerOptions="{ itemSize: 24 }" class="w-full" />
 
         <div class="credits">
 
