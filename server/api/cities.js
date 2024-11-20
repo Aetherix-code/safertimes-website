@@ -33,7 +33,7 @@ export default defineCachedEventHandler(async (event) => {
         getKey: (event) => {
             const query = getQuery(event);
             const queryString = JSON.stringify(query);
-            const encodedKey = Buffer.from(queryString).toString('base64');=
+            const encodedKey = Buffer.from(queryString).toString('base64');
             return encodedKey;
         },
     })
