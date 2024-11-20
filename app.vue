@@ -4,7 +4,6 @@ const cities = ref([]);
 
 onMounted(() => {
   $fetch('/api/list_cities').then(citiesFetchResult => {
-    console.log(citiesFetchResult)
     cities.value = citiesFetchResult.cities;
   })
 })

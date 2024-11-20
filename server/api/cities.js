@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
     const db = event.context.mongo;
     const collection = db.collection('sirens');
 
@@ -28,14 +28,12 @@ export default defineEventHandler(async (event) => {
         })
     }
 },
-{
-    maxAge: 60 * 60 * 8, // Cache for 8 hours
-    getKey: (event) => {
-        const query = getQuery(event);
-
-        console.log({query})
-
-        // Create a unique cache key based on query params
-        return JSON.stringify(query);
-    },
-})
+    {
+        maxAge: 60 * 60 * 8, // Cache for 8 hours
+        getKey: (event) => {
+            const query = getQuery(event);
+            const queryString = JSON.stringify(query);
+            const encodedKey = Buffer.from(queryString).toString('base64');=
+            return encodedKey;
+        },
+    })
