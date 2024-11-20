@@ -16,7 +16,6 @@ export default defineNuxtConfig({
   modules: [
     '@primevue/nuxt-module',
     'nuxt-gtag',
-    '@nuxt/icon',
     '@vite-pwa/nuxt',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',

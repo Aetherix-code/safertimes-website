@@ -1,6 +1,10 @@
 <script setup>
-import { cities } from './data/cities';
+// import { cities } from './data/cities';
 const route = useRoute();
+const cities = ref([]);
+useAsyncData('cities', () => $fetch('/api/list_cities')).then(citiesFetchResult => {
+  cities.value = citiesFetchResult.data.value.cities;
+})
 
 const entries = ref([]);
 const firstDate = ref('');

@@ -11,7 +11,6 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@nuxt/icon": "^1.7.2",
     "@nuxt/image": "^1.8.1",
     "@nuxtjs/robots": "^4.1.11",
     "@nuxtjs/sitemap": "^6.1.5",
