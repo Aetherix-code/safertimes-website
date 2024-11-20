@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxt/icon": "^1.7.2",
+    "@nuxtjs/robots": "^4.1.11",
     "@nuxtjs/sitemap": "^6.1.5",
     "@primevue/themes": "^4.2.1",
     "@vite-pwa/nuxt": "^0.10.6",

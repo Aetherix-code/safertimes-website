@@ -18,7 +18,8 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     '@nuxt/icon',
     '@vite-pwa/nuxt',
-    '@nuxtjs/sitemap'
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots'
   ],
   primevue: {
     options: {
