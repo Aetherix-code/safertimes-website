@@ -1,8 +1,6 @@
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
     const db = event.context.mongo;
     const collection = db.collection('sirens');
-    // const client = new MongoClient(process.env.MONGO_URL);
-    // const collection = client.db('saferTimes').collection('sirens');
 
     let cities = getQuery(event).cities;
     if (cities && !Array.isArray(cities) && cities) {
@@ -12,10 +10,9 @@ export default defineEventHandler(async (event) => {
     try {
         let query = {};
         if (cities) {
-            query = {'siren.data': {'$in': cities}};
+            query = { 'siren.data': { '$in': cities } };
         }
-        const docs = await collection.find(query).sort({'date': '-1'}).toArray();
-        // client.close();
+        const docs = await collection.find(query, { projection: { 'siren.time': 1, 'siren.date': 1 } }).sort({ 'date': '-1' }).toArray();
         const entries = docs.map(entry => entry.siren.time);
         let firstDate = null;
         if (entries.length) {
@@ -30,4 +27,13 @@ export default defineEventHandler(async (event) => {
             statusMessage: 'Failed to get data'
         })
     }
+},
+{
+    maxAge: 60 * 60 * 8, // Cache for 8 hours
+    getKey: (event) => {
+        const query = getQuery(event);
+
+        // Create a unique cache key based on query params
+        return JSON.stringify(query);
+    },
 })
