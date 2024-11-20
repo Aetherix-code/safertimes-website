@@ -1,9 +1,12 @@
 <script setup>
-// import { cities } from './data/cities';
 const route = useRoute();
 const cities = ref([]);
-useAsyncData('cities', () => $fetch('/api/list_cities')).then(citiesFetchResult => {
-  cities.value = citiesFetchResult.data.value.cities;
+
+onMounted(() => {
+  $fetch('/api/list_cities').then(citiesFetchResult => {
+    console.log(citiesFetchResult)
+    cities.value = citiesFetchResult.cities;
+  })
 })
 
 const entries = ref([]);
