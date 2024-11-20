@@ -74,22 +74,6 @@ const chartOptions = ref({
   }
 });
 
-
-onMounted(async () => {
-  const script = document.createElement("script");
-  script.setAttribute("data-name", "BMC-Widget");
-  script.setAttribute("data-cfasync", "false");
-  script.src = "https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js";
-  script.setAttribute("data-id", "jerryvdp");
-  script.setAttribute("data-description", "Support me on Buy me a coffee!");
-  script.setAttribute("data-message", "");
-  script.setAttribute("data-color", "#BD5FFF");
-  script.setAttribute("data-position", "Right");
-  script.setAttribute("data-x_margin", "18");
-  script.setAttribute("data-y_margin", "18");
-  document.getElementById("bmc-widget-container").appendChild(script);
-})
-
 const chartData = computed(() => {
   return {
     labels: ['00:00-06:00', '06:00-08:00', '08:00-10:00', '10:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00', '22:00-00:00'],
