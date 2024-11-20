@@ -1,4 +1,4 @@
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
     const db = event.context.mongo;
     const collection = db.collection('sirens');
 
@@ -32,6 +32,8 @@ export default defineCachedEventHandler(async (event) => {
     maxAge: 60 * 60 * 8, // Cache for 8 hours
     getKey: (event) => {
         const query = getQuery(event);
+
+        console.log({query})
 
         // Create a unique cache key based on query params
         return JSON.stringify(query);
