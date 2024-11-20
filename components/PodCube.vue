@@ -40,7 +40,7 @@ const statusText = computed(() => {
             <template #title>{{ props.title }}</template>
             <template #subtitle>{{ props.hoursRange }}</template>
             <template #content>
-                <Image class="pod-row-image" :src="props.image" />
+                <NuxtImg width="67" height="67" format="webp" class="pod-row-image" :src="props.image" />
                 <div class="flex">
                     <div class="circle-container">
                         <div class="circle circle-1"></div>
@@ -167,10 +167,7 @@ const statusText = computed(() => {
         position: absolute;
         top: 5px;
         left: 5px;
-
-        img {
-            height: 67px;
-        }
+        height: 67px;
     }
 }
 </style>

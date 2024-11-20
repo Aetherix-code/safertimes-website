@@ -154,7 +154,7 @@ const selectCities = async () => {
   <div class="mb-4">
     <div class="flex justify-content-center w-full">
       <div class="logo-container">
-        <img src="/images/logo.png" />
+        <NuxtImg width="67" height="67" format="webp" src="/images/logo.png" />
       </div>
       <div>
         <div class="flex flex-column justify-content-center mr-2" style="height: 67px">

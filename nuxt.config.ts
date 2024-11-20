@@ -19,7 +19,8 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@vite-pwa/nuxt',
     '@nuxtjs/sitemap',
-    '@nuxtjs/robots'
+    '@nuxtjs/robots',
+    '@nuxt/image'
   ],
   primevue: {
     options: {
