@@ -9,6 +9,7 @@ onMounted(() => {
 })
 
 const entries = ref([]);
+const spreadNightEntries = ref(false);
 const firstDate = ref('');
 const hasResults = ref(true);
 const selectedCities = ref(route.query.cities?.split('_') || []);
@@ -81,15 +82,30 @@ const chartOptions = ref({
 });
 
 const chartData = computed(() => {
+  const nightEntries = [];
+  const nightLabels = [];
+  if (! spreadNightEntries.value) {
+    nightLabels.push('00:00-06:00');
+
+    nightEntries.push(getPercentageInRange(0, 6));
+  } else {
+    nightLabels.push('00:00-02:00');
+    nightLabels.push('02:00-04:00');
+    nightLabels.push('04:00-06:00');
+
+    nightEntries.push(getPercentageInRange(0, 2));
+    nightEntries.push(getPercentageInRange(2, 4));
+    nightEntries.push(getPercentageInRange(4, 6));
+  }
   return {
-    labels: ['00:00-06:00', '06:00-08:00', '08:00-10:00', '10:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00', '22:00-00:00'],
+    labels: [...nightLabels, '06:00-08:00', '08:00-10:00', '10:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00', '22:00-00:00'],
     datasets: [
       {
         label: 'התפלגות אזעקות (%)',
         backgroundColor: '#346793',
         borderColor: '#346793',
         data: [
-          getPercentageInRange(0, 6),
+          ...nightEntries,
           getPercentageInRange(6, 8),
           getPercentageInRange(8, 10),
           getPercentageInRange(10, 12),
@@ -215,9 +231,20 @@ const selectCities = async () => {
           :percentage="getPercentageInRange(21, 24) + getPercentageInRange(0, 6)" />
       </div>
 
-      <Card v-if="entries.length">
+      <Card v-if="entries.length" class="chart-card">
         <template #content>
-          <Chart type="bar" :data="chartData" :options="chartOptions" style="height:300px;" />
+          <div class="chart-header">
+            <div class="group-night-container">
+              <Chip>
+                פריסת שעות לילה
+                <ToggleSwitch v-model="spreadNightEntries" />
+              </Chip>
+            </div>
+          </div>
+
+          <div>
+            <Chart type="bar" :data="chartData" :options="chartOptions" style="height:300px;" />
+          </div>
         </template>
       </Card>
     </div>
@@ -227,7 +254,8 @@ const selectCities = async () => {
     <Card class="w-full md:w-10 mx-auto cities-card">
       <template #content class="pb-5">
         <MultiSelect v-model="selectedCities" :options="cities" @change="selectCities" display="chip"
-          :showToggleAll="false" emptyFilterMessage="לא נמצאו תוצאות" filter placeholder="כל האזורים" :virtualScrollerOptions="{ itemSize: 24 }" class="w-full" />
+          :showToggleAll="false" emptyFilterMessage="לא נמצאו תוצאות" filter placeholder="כל האזורים"
+          :virtualScrollerOptions="{ itemSize: 24 }" class="w-full" />
 
         <div class="credits">
 
@@ -249,7 +277,10 @@ const selectCities = async () => {
   </div>
 </template>
 
-<style lang="css">
+<style lang="scss">
+.chart-card {
+  --p-card-body-padding: .5em;
+}
 :root {
   --background-color-light: #f8fafc;
   --background-color-dark: #202122;
@@ -317,5 +348,21 @@ section.loading-results {
 .credits>a {
   color: #346793;
   text-decoration: none;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+
+  .group-night-container {
+    font-size: 0.7em;
+    margin-right: auto;
+    margin-bottom: 5px;
+    font-weight: bold;
+    --p-toggleswitch-width: 2rem;
+    --p-toggleswitch-height: 1rem;
+    --p-toggleswitch-handle-size: .6rem;
+    --p-toggleswitch-handle-offset: 0.15rem;
+  }
 }
 </style>
