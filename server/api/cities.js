@@ -14,7 +14,7 @@ export default defineCachedEventHandler(async (event) => {
         }
         // Calculate the date 3 months ago from now
         const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 6);
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
 
         // Add alertDate filter to the query
         query['siren.alertDate'] = { $gt: threeMonthsAgo.toISOString() };
